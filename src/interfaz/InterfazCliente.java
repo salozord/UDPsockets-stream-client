@@ -41,6 +41,7 @@ public class InterfazCliente extends JFrame
 		
 		canvas = new Canvas();
 		canvas.setBackground(Color.black);
+		// CREAR EL MEDIA PLAYER AQUI CREO, MAÑANA MIRO
 		
 		JPanel aux = new JPanel();
 		aux.setLayout(new BorderLayout());
