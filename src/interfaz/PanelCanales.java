@@ -29,7 +29,7 @@ public class PanelCanales extends JPanel implements ActionListener {
 
 	public PanelCanales(InterfazCliente p) {
 		principal = p;
-		setPreferredSize(new Dimension(300, 400));
+		setPreferredSize(new Dimension(400, 400));
 		setLayout(new BorderLayout());
 		
 		inicializarPanelCanales();

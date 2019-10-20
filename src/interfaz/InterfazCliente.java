@@ -1,7 +1,6 @@
 package interfaz;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -31,17 +30,17 @@ public class InterfazCliente extends JFrame
 	
 	public void inicializar() 
 	{
-		
+		dialogoAcceso = null;
 		setLocationRelativeTo(null);
 		setTitle("Video Streaming Client");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(1100, 600);
+		setSize(1200, 600);
 		setResizable(false);
 		setLayout(new BorderLayout());
 		
 		reproductor = new EmbeddedMediaPlayerComponent();
-		reproductor.setBackground(Color.black);
-		reproductor.setSize(800, 600);
+//		reproductor.setBackground(Color.black);
+//		reproductor.setSize(800, 600);
 		
 //		MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(new String[] {"--no-plugins-cache", "--no-video-title-show", "--no-snapshot-preview"}) ;
 //      reproductor.set(mediaPlayerFactory.videoSurfaces().newVideoSurface(canvas));
@@ -58,6 +57,7 @@ public class InterfazCliente extends JFrame
 		add(aux, BorderLayout.WEST);
 		add(reproductor, BorderLayout.CENTER);
 		setVisible(true);
+		repaint();
 	}
 	
 	public Cliente getCliente() {
