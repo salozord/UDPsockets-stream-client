@@ -1,7 +1,6 @@
 package interfaz;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Color;
 
 import javax.swing.JFrame;
@@ -9,12 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import logica.Cliente;
-import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
-import uk.co.caprica.vlcj.factory.VideoSurfaceApi;
-import uk.co.caprica.vlcj.player.base.ControlsApi;
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
-import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-import uk.co.caprica.vlcj.player.embedded.videosurface.ComponentVideoSurface;
 
 public class InterfazCliente extends JFrame
 {
@@ -22,11 +16,9 @@ public class InterfazCliente extends JFrame
 	private static final long serialVersionUID = 1L;
 	
 	private Cliente cliente;
-//	private MediaPlayerFactory mediaPlayerFactory;
-//	private EmbeddedMediaPlayer mediaPlayer;
+	private EmbeddedMediaPlayerComponent reproductor;
 	
 	private DialogoAcceso dialogoAcceso;
-	private Canvas canvas;
 	private PanelEnviarVideo panelEnviarVideo;
 	private PanelCanales panelCanales;
 	
@@ -47,14 +39,13 @@ public class InterfazCliente extends JFrame
 		setResizable(false);
 		setLayout(new BorderLayout());
 		
-		canvas = new Canvas();
-		canvas.setBackground(Color.black);
-		canvas.setSize(800, 600);
-		EmbeddedMediaPlayerComponent mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
-        EmbeddedMediaPlayer embeddedMediaPlayer = mediaPlayerComponent.mediaPlayer();
-        MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(new String[] {"--no-plugins-cache", "--no-video-title-show", "--no-snapshot-preview"}) ;
-        embeddedMediaPlayer.videoSurface().set(mediaPlayerFactory.videoSurfaces().newVideoSurface(canvas));
-//        embeddedMediaPlayer.chapters()..setPlaySubItems(true);
+		reproductor = new EmbeddedMediaPlayerComponent();
+		reproductor.setBackground(Color.black);
+		reproductor.setSize(800, 600);
+		
+//		MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(new String[] {"--no-plugins-cache", "--no-video-title-show", "--no-snapshot-preview"}) ;
+//      reproductor.set(mediaPlayerFactory.videoSurfaces().newVideoSurface(canvas));
+//      embeddedMediaPlayer.chapters()..setPlaySubItems(true);
         
 		JPanel aux = new JPanel();
 		aux.setLayout(new BorderLayout());
@@ -65,7 +56,7 @@ public class InterfazCliente extends JFrame
 		aux.add(panelCanales, BorderLayout.CENTER);
 		
 		add(aux, BorderLayout.WEST);
-		add(canvas, BorderLayout.CENTER);
+		add(reproductor, BorderLayout.CENTER);
 		setVisible(true);
 	}
 	
@@ -94,22 +85,42 @@ public class InterfazCliente extends JFrame
 
 
 	public void conectar(int index) {
+		// Cambia el canal actual al cual el cliente está conectado para recibir vídeo
+		String nuevoCanal = cliente.getListaCanales().get(index).split("/")[0];
+		cliente.setCanalActual(nuevoCanal);
 		
+		//Actualiza el reproductor en el canal actual para recibir el streaming
+//		reproductor.media().play(getCliente().getCanalActual(), {});
+		reproductor.mediaPlayer().controls().stop();
+		reproductor.mediaPlayer().release();
+//		Thread play = new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				reproductor.mediaPlayer().media().start(cliente.getCanalActual());
+//			}
+//		});
+//		play.start();
+		reproductor.mediaPlayer().media().play(cliente.getCanalActual());
+		System.out.println("DESPUES DEL PLAY");
 	}
 	
 	public void enviarArchivo() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public void reproducir() {
-		// TODO Auto-generated method stub
-		
+		try {
+			cliente.enviarArchivo();
+			panelEnviarVideo.actualizarNombreArchivo("-----");
+			panelEnviarVideo.habilitarBotonEnviar(false);
+			panelCanales.actualizarLista();
+			JOptionPane.showMessageDialog(this, "El archivo fue enviado correctamente al servidor!\nRevise los canales actualizados.", "Archivo Enviado", JOptionPane.INFORMATION_MESSAGE);
+		} 
+		catch (Exception e) {
+			panelEnviarVideo.actualizarNombreArchivo("-----");
+			panelEnviarVideo.habilitarBotonEnviar(false);
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
-	public void pausar() {
-		// TODO Auto-generated method stub
-		
+	public void playPausa() {
+		reproductor.mediaPlayer().controls().pause();
 	}
 	
 	public static void main(String[] args) {

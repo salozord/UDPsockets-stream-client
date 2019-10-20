@@ -95,7 +95,10 @@ public class PanelEnviarVideo extends JPanel implements ActionListener
 	
 	public void actualizarNombreArchivo(String nuevo) {
 		nombreArchivo.setText(nuevo);
-		butEnviar.setEnabled(true);
+	}
+	
+	public void habilitarBotonEnviar(boolean habilitar) {
+		butEnviar.setEnabled(habilitar);
 	}
 	
 	@Override
@@ -103,14 +106,15 @@ public class PanelEnviarVideo extends JPanel implements ActionListener
 		String comando = e.getActionCommand();
 		
 		if(comando.equals(ENVIAR)) {
+			habilitarBotonEnviar(false);
 			principal.enviarArchivo();
-			butEnviar.setEnabled(false);
 		}
 		else if(comando.equals(SELECCIONAR)) {
 			File sel = seleccionarArchivo();
 			if(sel != null) {
 				principal.getCliente().setArchivoEnviar(sel);
 				actualizarNombreArchivo(sel.getName());
+				habilitarBotonEnviar(true);
 			}
 		}
 	}

@@ -16,8 +16,8 @@ public class PanelCanales extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	public static final String CONECTAR = "CONECTAR";
-	public static final String PLAY = "PLAY";
-	public static final String PAUSA = "PAUSA";
+	public static final String PLAYPAUSA = "PLAYPAUSA";
+//	public static final String PAUSA = "PAUSA";
 	
 	
 	private InterfazCliente principal;
@@ -25,7 +25,7 @@ public class PanelCanales extends JPanel implements ActionListener {
 	private JComboBox<String> listaCanales;
 	private JButton butConectar;
 	private JButton butPlay;
-	private JButton butPausa;
+//	private JButton butPausa;
 
 	public PanelCanales(InterfazCliente p) {
 		principal = p;
@@ -54,55 +54,58 @@ public class PanelCanales extends JPanel implements ActionListener {
 		
 		// Inicializo y configuro panel de controles
 		JPanel sur = new JPanel();
-		sur.setLayout(new GridLayout(1, 2, 4, 4));
+		sur.setLayout(new GridLayout(1, 3, 4, 4));
 		sur.setBorder(new TitledBorder("Controles"));
 		
 		butPlay = new JButton("Play");
 		butPlay.addActionListener(this);
-		butPlay.setActionCommand(PLAY);
+		butPlay.setActionCommand(PLAYPAUSA);
 		butPlay.setEnabled(false);
 		
-		butPausa = new JButton("Pausa");
-		butPausa.addActionListener(this);
-		butPausa.setActionCommand(PAUSA);
-		butPausa.setEnabled(false);
+//		butPausa = new JButton("Pausa");
+//		butPausa.addActionListener(this);
+//		butPausa.setActionCommand(PAUSA);
+//		butPausa.setEnabled(false);
 		
+		sur.add(new JLabel());
 		sur.add(butPlay);
-		sur.add(butPausa);
+		sur.add(new JLabel());
+//		sur.add(butPausa);
 		
 		add(centro, BorderLayout.CENTER);
 		add(sur, BorderLayout.SOUTH);
 	}
 	
 	private void actualizarBotones(String comando) {
-		switch (comando) {
-		case PLAY:
-			butPlay.setEnabled(false);
-			butPausa.setEnabled(true);
-			break;
-		case PAUSA:			
-			butPlay.setEnabled(true);
-			butPausa.setEnabled(false);
-			break;
-		default:
-			butPlay.setEnabled(false);
-			butPausa.setEnabled(true);
-			break;
+		if(comando.equals(PLAYPAUSA)) {
+			if(butPlay.getText().equals("Play")) {
+				butPlay.setText("Pausar");
+			}
+			else {
+				butPlay.setText("Play");
+			}
 		}
+	}
+	
+	public void actualizarLista() {
+		listaCanales = new JComboBox<String>((String[]) principal.getCliente().getListaCanales().toArray());
+		repaint();
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
-		actualizarBotones(comando);
 		if(comando.equals(CONECTAR)) {
 			principal.conectar(listaCanales.getSelectedIndex());
+			butPlay.setText("Play");
+			actualizarBotones(PLAYPAUSA);
 		}
-		else if (comando.equals(PLAY)) {
-			principal.reproducir();
+		else if (comando.equals(PLAYPAUSA)) {				
+			actualizarBotones(comando);
+			principal.playPausa();
 		}
-		else if(comando.equals(PAUSA)) {
-			principal.pausar();
-		}
+//		else if(comando.equals(PAUSA)) {
+//			principal.pausar();
+//		}
 	}
 }

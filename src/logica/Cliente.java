@@ -1,7 +1,11 @@
 package logica;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -11,20 +15,24 @@ public class Cliente {
 
 	public static final String HOST = "localhost";
 	public static final int PORT = 8787;
+	public static final int TAMANIO_SEGMENTO = 8192;
 	public static final String SEPARADOR = ";";
 	public static final String AUTENTICADO = "AUTENTICADO";
 	public static final String ERROR = "ERROR";
 	public static final String VIDEO = "VIDEO";
+	public static final String PROTOCOLO = "udp://";
 	
 	private Socket s;
 	private BufferedReader in;
 	private PrintWriter out;
 	private ArrayList<String> listaCanales;
 	private File seleccionado;
+	private String canalActual;
 	
 	public Cliente() {
 		listaCanales = new ArrayList<>();
 		seleccionado = null;
+		canalActual = null;
 	}
 	
 	public boolean autenticacion(String usuario, String contrasenia) throws Exception {
@@ -63,6 +71,14 @@ public class Cliente {
 		return autenticado;
 	}
 	
+	public String getCanalActual() {
+		return canalActual;
+	}
+	
+	public void setCanalActual(String nuevo) {
+		canalActual = PROTOCOLO + nuevo;
+	}
+	
 	public ArrayList<String> getListaCanales() {
 		return listaCanales;
 	}
@@ -73,5 +89,40 @@ public class Cliente {
 	
 	public File getArchivoEnviar() {
 		return seleccionado;
+	}
+
+	public void enviarArchivo() throws Exception {
+		
+		// Se notifica al servidor que se enviará un video
+		out.println(VIDEO + SEPARADOR + seleccionado.getName());
+		
+		byte[] contenedor = new byte[TAMANIO_SEGMENTO];
+		BufferedInputStream bis = new BufferedInputStream(new FileInputStream(seleccionado));
+		DataOutputStream dos =  new DataOutputStream(s.getOutputStream());
+		
+		int r;
+		while ((r = bis.read(contenedor)) != -1) {
+			dos.write(contenedor, 0, r);
+		}
+		dos.flush();
+		bis.close();
+		
+		String nuevaLista = in.readLine();
+		if(nuevaLista.equals(ERROR)) {
+			throw new Exception("Ocurrió un error al enviar el archivo o al recibirlo por parte del cliente. Intentelo nuevamente.");
+		}
+		
+		String[] nuevos = nuevaLista.split(SEPARADOR);
+		listaCanales = new ArrayList<>();
+		for (String c : nuevos)
+			listaCanales.add(c);
+		
+//		Thread envio = new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				
+//			}
+//		});
+//		envio.start();
 	}
 }
