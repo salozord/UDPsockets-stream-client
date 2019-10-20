@@ -6,6 +6,7 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import logica.Cliente;
 
@@ -13,9 +14,13 @@ public class InterfazCliente extends JFrame
 {
 
 	private static final long serialVersionUID = 1L;
-	private DialogoAcceso dialogoAcceso;
 	
 	private Cliente cliente;
+	
+	private DialogoAcceso dialogoAcceso;
+	private Canvas canvas;
+	private PanelEnviarVideo panelEnviarVideo;
+	private PanelCanales panelCanales;
 	
 	public InterfazCliente() {
 		
@@ -28,15 +33,26 @@ public class InterfazCliente extends JFrame
 	{
 		
 		setLocationRelativeTo(null);
+		setTitle("Video Streaming Client");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(800, 800);
+		setSize(1100, 600);
 		setResizable(false);
-		
 		setLayout(new BorderLayout());
-		Canvas c = new Canvas();
-		c.setBackground(Color.black);
 		
-		add(c, BorderLayout.NORTH);
+		canvas = new Canvas();
+		canvas.setBackground(Color.black);
+		
+		JPanel aux = new JPanel();
+		aux.setLayout(new BorderLayout());
+		panelEnviarVideo = new PanelEnviarVideo(this);
+		panelCanales = new PanelCanales(this);
+		
+		aux.add(panelEnviarVideo, BorderLayout.NORTH);
+		aux.add(panelCanales, BorderLayout.CENTER);
+		
+		add(aux, BorderLayout.WEST);
+		add(canvas, BorderLayout.CENTER);
+		setVisible(true);
 	}
 	
 	public Cliente getCliente() {
@@ -50,7 +66,7 @@ public class InterfazCliente extends JFrame
 			// Si se autentica correctamente
 			if(auth) {
 				dialogoAcceso.dispose();
-				
+				inicializar();
 			}
 			else {
 				throw new Exception("Usuario o contraseña incorrectos. Por favor intentelo nuevamente.");
@@ -62,6 +78,26 @@ public class InterfazCliente extends JFrame
 		
 	}
 
+
+	public void conectar(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void enviarArchivo() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void reproducir() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void pausar() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	public static void main(String[] args) {
 		try {			
