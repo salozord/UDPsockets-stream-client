@@ -125,6 +125,7 @@ public class InterfazCliente extends JFrame
 	
 	public static void main(String[] args) {
 		try {			
+			@SuppressWarnings("unused")
 			InterfazCliente i = new InterfazCliente();
 		}
 		catch (Exception e) {
