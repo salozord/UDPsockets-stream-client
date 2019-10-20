@@ -9,6 +9,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import logica.Cliente;
+import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
+import uk.co.caprica.vlcj.factory.VideoSurfaceApi;
+import uk.co.caprica.vlcj.player.base.ControlsApi;
+import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+import uk.co.caprica.vlcj.player.embedded.videosurface.ComponentVideoSurface;
 
 public class InterfazCliente extends JFrame
 {
@@ -16,6 +22,8 @@ public class InterfazCliente extends JFrame
 	private static final long serialVersionUID = 1L;
 	
 	private Cliente cliente;
+//	private MediaPlayerFactory mediaPlayerFactory;
+//	private EmbeddedMediaPlayer mediaPlayer;
 	
 	private DialogoAcceso dialogoAcceso;
 	private Canvas canvas;
@@ -41,8 +49,13 @@ public class InterfazCliente extends JFrame
 		
 		canvas = new Canvas();
 		canvas.setBackground(Color.black);
-		// CREAR EL MEDIA PLAYER AQUI CREO, MAÑANA MIRO
-		
+		canvas.setSize(800, 600);
+		EmbeddedMediaPlayerComponent mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
+        EmbeddedMediaPlayer embeddedMediaPlayer = mediaPlayerComponent.mediaPlayer();
+        MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(new String[] {"--no-plugins-cache", "--no-video-title-show", "--no-snapshot-preview"}) ;
+        embeddedMediaPlayer.videoSurface().set(mediaPlayerFactory.videoSurfaces().newVideoSurface(canvas));
+//        embeddedMediaPlayer.chapters()..setPlaySubItems(true);
+        
 		JPanel aux = new JPanel();
 		aux.setLayout(new BorderLayout());
 		panelEnviarVideo = new PanelEnviarVideo(this);
@@ -81,7 +94,6 @@ public class InterfazCliente extends JFrame
 
 
 	public void conectar(int index) {
-		// TODO Auto-generated method stub
 		
 	}
 	
