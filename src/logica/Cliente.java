@@ -40,10 +40,10 @@ public class Cliente {
 			String lista = in.readLine();
 			if(lista == null)
 				throw new Exception("Se autenticó pero no se recibió la lista de canales.");
+			
 			String[] elementos = lista.split(SEPARADOR);
 			for(String canal: elementos)
 				listaCanales.add(canal);
-			
 			
 			in.close();
 			out.close();
