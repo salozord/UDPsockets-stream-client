@@ -48,6 +48,7 @@ public class PanelEnviarVideo extends JPanel implements ActionListener
 		nomArch.setHorizontalAlignment(JLabel.CENTER);
 		nombreArchivo = new JTextField("----");
 		nombreArchivo.setHorizontalAlignment(JTextField.CENTER);
+		nombreArchivo.setEditable(false);
 		
 		centro.add(new JLabel());
 		centro.add(nomArch);

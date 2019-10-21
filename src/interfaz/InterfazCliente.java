@@ -1,6 +1,9 @@
 package interfaz;
 
 import java.awt.BorderLayout;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -40,11 +43,6 @@ public class InterfazCliente extends JFrame
 		
 		reproductor = new EmbeddedMediaPlayerComponent();
 		reproductor.setSize(800, 600);
-//		reproductor.setBackground(Color.black);
-		
-//		MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(new String[] {"--no-plugins-cache", "--no-video-title-show", "--no-snapshot-preview"}) ;
-//      reproductor.set(mediaPlayerFactory.videoSurfaces().newVideoSurface(canvas));
-//      embeddedMediaPlayer.chapters()..setPlaySubItems(true);
         
 		JPanel aux = new JPanel();
 		aux.setLayout(new BorderLayout());
@@ -84,14 +82,27 @@ public class InterfazCliente extends JFrame
 	}
 
 
-	public void conectar(int index) {
+	public void conectar(int index) throws Exception {
 		// Cambia el canal actual al cual el cliente está conectado para recibir vídeo
 		String nuevoCanal = cliente.getListaCanales().get(index).split("/")[0];
 		cliente.setCanalActual(nuevoCanal);
 		
 		//Actualiza el reproductor en el canal actual para recibir el streaming
-//		reproductor.media().play(getCliente().getCanalActual(), {});
-		reproductor.mediaPlayer().controls().stop();
+//		MulticastSocket mcs = new MulticastSocket(Integer.parseInt(nuevoCanal.split(":")[1]));
+//		mcs.joinGroup(InetAddress.getByName(nuevoCanal.split(":")[0]));
+//		byte[] buf = new byte[32768];
+//		while(true) {
+//			DatagramPacket packet = new DatagramPacket(buf, buf.length);
+//            mcs.receive(packet);
+//            String received = new String(
+//              packet.getData(), 0, packet.getLength());
+//            System.out.println(received);
+//		}
+		
+//		reproductor.mediaPlayer().controls().stop();
+//		boolean ans = reproductor.mediaPlayer().media().prepare(cliente.getCanalActual());
+//		System.out.println(ans);
+//		System.out.println(cliente.getCanalActual());
 //		reproductor.mediaPlayer().release();
 //		Thread play = new Thread(new Runnable() {
 //			@Override
@@ -100,16 +111,22 @@ public class InterfazCliente extends JFrame
 //			}
 //		});
 //		play.start();
-		reproductor.mediaPlayer().media().start(cliente.getCanalActual());
-		System.out.println("DESPUES DEL PLAY");
+		reproductor.mediaPlayer().media().play(cliente.getCanalActual());
+		System.out.println(cliente.getCanalActual());
+//		reproductor.mediaPlayer().media().play("udp://@:");
+//		repaint();
+//		System.out.println("DESPUES DEL PLAY");
 	}
 	
 	public void enviarArchivo() {
 		try {
+			JOptionPane.showMessageDialog(this, "Espere mientas se envía su vídeo al servidor.", "Información", JOptionPane.INFORMATION_MESSAGE);
 			cliente.enviarArchivo();
 			panelEnviarVideo.actualizarNombreArchivo("-----");
 			panelEnviarVideo.habilitarBotonEnviar(false);
 			panelCanales.actualizarLista();
+			validate();
+			repaint();
 			JOptionPane.showMessageDialog(this, "El archivo fue enviado correctamente al servidor!\nRevise los canales actualizados.", "Archivo Enviado", JOptionPane.INFORMATION_MESSAGE);
 		} 
 		catch (Exception e) {

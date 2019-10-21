@@ -19,7 +19,7 @@ public class Cliente {
 	public static final String AUTENTICADO = "AUTENTICADO";
 	public static final String ERROR = "ERROR";
 	public static final String VIDEO = "VIDEO";
-	public static final String PROTOCOLO = "udp://@";
+	public static final String PROTOCOLO = "rtp://@";
 	
 	private Socket s;
 	private BufferedReader in;
@@ -27,11 +27,13 @@ public class Cliente {
 	private ArrayList<String> listaCanales;
 	private File seleccionado;
 	private String canalActual;
+	private int progreso;
 	
 	public Cliente() {
 		listaCanales = new ArrayList<>();
 		seleccionado = null;
 		canalActual = null;
+		progreso = 0;
 	}
 	
 	public boolean autenticacion(String usuario, String contrasenia) throws Exception {
@@ -58,10 +60,6 @@ public class Cliente {
 			for(String canal: elementos)
 				listaCanales.add(canal);
 			
-			// YA ANO SE MUEREN
-//			in.close();
-//			out.close();
-//			s.close();
 		}
 		else if(!confirmacion.equals(ERROR)) {
 			throw new Exception("Ocurrió un error con la autenticación"); 
@@ -92,34 +90,43 @@ public class Cliente {
 
 	public void enviarArchivo() throws Exception {
 		
-		// Se notifica al servidor que se enviará un video
-		out.println(VIDEO + SEPARADOR + seleccionado.getName());
-		
-		byte[] contenedor = new byte[TAMANIO_SEGMENTO];
-		BufferedInputStream bis = new BufferedInputStream(new FileInputStream(seleccionado));
-		DataOutputStream dos =  new DataOutputStream(s.getOutputStream());
-		
-		int r;
-		while ((r = bis.read(contenedor)) != -1) {
-			dos.write(contenedor, 0, r);
-		}
-		dos.flush();
-		bis.close();
-		
-		String nuevaLista = in.readLine();
-		if(nuevaLista.equals(ERROR)) {
-			throw new Exception("Ocurrió un error al enviar el archivo o al recibirlo por parte del cliente. Intentelo nuevamente.");
-		}
-		
-		String[] nuevos = nuevaLista.split(SEPARADOR);
-		listaCanales = new ArrayList<>();
-		for (String c : nuevos)
-			listaCanales.add(c);
 		
 //		Thread envio = new Thread(new Runnable() {
 //			@Override
 //			public void run() {
-//				
+				try {					
+					// Se notifica al servidor que se enviará un video
+					out.println(VIDEO + SEPARADOR + seleccionado.getName());
+					
+					byte[] contenedor = new byte[TAMANIO_SEGMENTO];
+					BufferedInputStream bis = new BufferedInputStream(new FileInputStream(seleccionado));
+					DataOutputStream dos =  new DataOutputStream(s.getOutputStream());
+					
+					dos.writeLong(seleccionado.length());
+					dos.flush();
+					
+					int r;
+					while ((r = bis.read(contenedor)) != -1) {
+						dos.write(contenedor, 0, r);
+						dos.flush();
+						progreso += r;
+					}
+					bis.close();
+					
+					String nuevaLista = in.readLine();
+					if(nuevaLista.equals(ERROR)) {
+						throw new Exception("Ocurrió un error al enviar el archivo o al recibirlo por parte del cliente. Intentelo nuevamente.");
+					}
+					
+					String[] nuevos = nuevaLista.split(SEPARADOR);
+					listaCanales = new ArrayList<>();
+					for (String c : nuevos) {
+						listaCanales.add(c);
+					}
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
 //			}
 //		});
 //		envio.start();

@@ -10,6 +10,7 @@ import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
@@ -79,6 +80,8 @@ public class PanelCanales extends JPanel implements ActionListener {
 	}
 	
 	private void actualizarBotones(String comando) {
+		if(!butPlay.isEnabled())
+			butPlay.setEnabled(true);
 		if(comando.equals(PLAYPAUSA)) {
 			if(butPlay.getText().equals("Play")) {
 				butPlay.setText("Pausar");
@@ -91,17 +94,24 @@ public class PanelCanales extends JPanel implements ActionListener {
 	
 	public void actualizarLista() {
 		Object[] objs = principal.getCliente().getListaCanales().toArray();
-		listaCanales = new JComboBox<String>(Arrays.copyOf(objs, objs.length, String[].class));
-		repaint();
+		String[] list = Arrays.copyOf(objs, objs.length, String[].class);
+		listaCanales.removeAllItems();
+		for (String l : list) {
+			listaCanales.addItem(l);
+		}
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
 		if(comando.equals(CONECTAR)) {
-			principal.conectar(listaCanales.getSelectedIndex());
 			butPlay.setText("Play");
 			actualizarBotones(PLAYPAUSA);
+			try {
+				principal.conectar(listaCanales.getSelectedIndex());
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		else if (comando.equals(PLAYPAUSA)) {				
 			actualizarBotones(comando);
