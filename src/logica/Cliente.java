@@ -108,7 +108,7 @@ public class Cliente {
 					BufferedInputStream bis = new BufferedInputStream(new FileInputStream(seleccionado));
 					DataOutputStream dos =  new DataOutputStream(s.getOutputStream());
 					
-					long total = seleccionado.length();
+					double total = (double)seleccionado.length();
 					
 					dos.writeLong(seleccionado.length());
 					dos.flush();
@@ -119,7 +119,7 @@ public class Cliente {
 						dos.write(contenedor, 0, r);
 						dos.flush();
 						suma += r;
-						progreso = (int) ((suma*100)/total);
+						progreso = (int) ((suma/total)*100);
 					}
 					bis.close();
 					

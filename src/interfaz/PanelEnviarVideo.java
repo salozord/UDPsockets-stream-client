@@ -110,7 +110,6 @@ public class PanelEnviarVideo extends JPanel implements ActionListener
 	
 	public void actualizarProgreso(int nuevo) {
 		progressBar.setValue(nuevo);
-		System.out.println(nuevo);
 	}
 	
 	@Override

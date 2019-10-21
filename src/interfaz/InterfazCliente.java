@@ -116,6 +116,7 @@ public class InterfazCliente extends JFrame
 		panelEnviarVideo.habilitarBotonEnviar(false);
 		panelCanales.actualizarLista();
 		JOptionPane.showMessageDialog(this, "El archivo fue enviado correctamente al servidor!\nRevise los canales actualizados.", "Archivo Enviado", JOptionPane.INFORMATION_MESSAGE);
+		panelEnviarVideo.actualizarProgreso(0);
 		
 	}
 	
