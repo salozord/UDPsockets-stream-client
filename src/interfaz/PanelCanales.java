@@ -19,7 +19,7 @@ public class PanelCanales extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	public static final String CONECTAR = "CONECTAR";
 	public static final String PLAYPAUSA = "PLAYPAUSA";
-//	public static final String PAUSA = "PAUSA";
+	public static final String COMPLETA = "COMPLETA";
 	
 	
 	private InterfazCliente principal;
@@ -27,7 +27,7 @@ public class PanelCanales extends JPanel implements ActionListener {
 	private JComboBox<String> listaCanales;
 	private JButton butConectar;
 	private JButton butPlay;
-//	private JButton butPausa;
+	private JButton butCompleta;
 
 	public PanelCanales(InterfazCliente p) {
 		principal = p;
@@ -57,7 +57,7 @@ public class PanelCanales extends JPanel implements ActionListener {
 		
 		// Inicializo y configuro panel de controles
 		JPanel sur = new JPanel();
-		sur.setLayout(new GridLayout(1, 3, 4, 4));
+		sur.setLayout(new GridLayout(1, 2, 12, 0));
 		sur.setBorder(new TitledBorder("Controles"));
 		
 		butPlay = new JButton("Play");
@@ -65,15 +65,13 @@ public class PanelCanales extends JPanel implements ActionListener {
 		butPlay.setActionCommand(PLAYPAUSA);
 		butPlay.setEnabled(false);
 		
-//		butPausa = new JButton("Pausa");
-//		butPausa.addActionListener(this);
-//		butPausa.setActionCommand(PAUSA);
-//		butPausa.setEnabled(false);
+		butCompleta = new JButton("Pant. Completa");
+		butCompleta.addActionListener(this);
+		butCompleta.setActionCommand(COMPLETA);
+		butCompleta.setEnabled(false);
 		
-		sur.add(new JLabel());
 		sur.add(butPlay);
-		sur.add(new JLabel());
-//		sur.add(butPausa);
+		sur.add(butCompleta);
 		
 		add(centro, BorderLayout.CENTER);
 		add(sur, BorderLayout.SOUTH);

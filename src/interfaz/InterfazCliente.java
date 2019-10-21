@@ -1,9 +1,6 @@
 package interfaz;
 
 import java.awt.BorderLayout;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -34,7 +31,6 @@ public class InterfazCliente extends JFrame
 	public void inicializar() 
 	{
 		dialogoAcceso = null;
-		setLocationRelativeTo(null);
 		setTitle("Video Streaming Client");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(1100, 600);
@@ -88,34 +84,7 @@ public class InterfazCliente extends JFrame
 		cliente.setCanalActual(nuevoCanal);
 		
 		//Actualiza el reproductor en el canal actual para recibir el streaming
-//		MulticastSocket mcs = new MulticastSocket(Integer.parseInt(nuevoCanal.split(":")[1]));
-//		mcs.joinGroup(InetAddress.getByName(nuevoCanal.split(":")[0]));
-//		byte[] buf = new byte[32768];
-//		while(true) {
-//			DatagramPacket packet = new DatagramPacket(buf, buf.length);
-//            mcs.receive(packet);
-//            String received = new String(
-//              packet.getData(), 0, packet.getLength());
-//            System.out.println(received);
-//		}
-		
-//		reproductor.mediaPlayer().controls().stop();
-//		boolean ans = reproductor.mediaPlayer().media().prepare(cliente.getCanalActual());
-//		System.out.println(ans);
-//		System.out.println(cliente.getCanalActual());
-//		reproductor.mediaPlayer().release();
-//		Thread play = new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				reproductor.mediaPlayer().media().start(cliente.getCanalActual());
-//			}
-//		});
-//		play.start();
 		reproductor.mediaPlayer().media().play(cliente.getCanalActual());
-		System.out.println(cliente.getCanalActual());
-//		reproductor.mediaPlayer().media().play("udp://@:");
-//		repaint();
-//		System.out.println("DESPUES DEL PLAY");
 	}
 	
 	public void enviarArchivo() {
