@@ -19,7 +19,8 @@ public class PanelCanales extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	public static final String CONECTAR = "CONECTAR";
 	public static final String PLAYPAUSA = "PLAYPAUSA";
-	public static final String COMPLETA = "COMPLETA";
+	public static final String MAS = "MAS";
+	public static final String MENOS = "MENOS";
 	
 	
 	private InterfazCliente principal;
@@ -27,7 +28,8 @@ public class PanelCanales extends JPanel implements ActionListener {
 	private JComboBox<String> listaCanales;
 	private JButton butConectar;
 	private JButton butPlay;
-	private JButton butCompleta;
+	private JButton butMas;
+	private JButton butMenos;
 
 	public PanelCanales(InterfazCliente p) {
 		principal = p;
@@ -57,7 +59,7 @@ public class PanelCanales extends JPanel implements ActionListener {
 		
 		// Inicializo y configuro panel de controles
 		JPanel sur = new JPanel();
-		sur.setLayout(new GridLayout(1, 2, 12, 0));
+		sur.setLayout(new GridLayout(1, 3, 12, 0));
 		sur.setBorder(new TitledBorder("Controles"));
 		
 		butPlay = new JButton("Play");
@@ -65,21 +67,30 @@ public class PanelCanales extends JPanel implements ActionListener {
 		butPlay.setActionCommand(PLAYPAUSA);
 		butPlay.setEnabled(false);
 		
-		butCompleta = new JButton("Pant. Completa");
-		butCompleta.addActionListener(this);
-		butCompleta.setActionCommand(COMPLETA);
-		butCompleta.setEnabled(false);
+		butMas = new JButton("Vol. +");
+		butMas.addActionListener(this);
+		butMas.setActionCommand(MAS);
+		butMas.setEnabled(false);
 		
+		butMenos = new JButton("Vol. -");
+		butMenos.addActionListener(this);
+		butMenos.setActionCommand(MENOS);
+		butMenos.setEnabled(false);
+		
+		sur.add(butMenos);
 		sur.add(butPlay);
-		sur.add(butCompleta);
+		sur.add(butMas);
 		
 		add(centro, BorderLayout.CENTER);
 		add(sur, BorderLayout.SOUTH);
 	}
 	
 	private void actualizarBotones(String comando) {
-		if(!butPlay.isEnabled())
+		if(!butPlay.isEnabled()) {
 			butPlay.setEnabled(true);
+			butMas.setEnabled(true);
+			butMenos.setEnabled(true);
+		}
 		if(comando.equals(PLAYPAUSA)) {
 			if(butPlay.getText().equals("Play")) {
 				butPlay.setText("Pausar");
@@ -115,8 +126,11 @@ public class PanelCanales extends JPanel implements ActionListener {
 			actualizarBotones(comando);
 			principal.playPausa();
 		}
-//		else if(comando.equals(PAUSA)) {
-//			principal.pausar();
-//		}
+		else if(comando.equals(MAS)) {
+			principal.subirVolumen();
+		}
+		else if(comando.equals(MENOS)) {
+			principal.bajarVolumen();
+		}
 	}
 }

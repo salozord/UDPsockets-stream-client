@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import interfaz.InterfazCliente;
+
 public class Cliente {
 
 	public static final String HOST = "localhost";
@@ -87,29 +89,37 @@ public class Cliente {
 	public File getArchivoEnviar() {
 		return seleccionado;
 	}
+	
+	public int getProgreso() {
+		return progreso;
+	}
 
-	public void enviarArchivo() throws Exception {
-		
-		
-//		Thread envio = new Thread(new Runnable() {
-//			@Override
-//			public void run() {
+	public void enviarArchivo(InterfazCliente i) throws Exception {
+		progreso = 0;
+		Thread envio = new Thread(new Runnable() {
+			@Override
+			public void run() {
 				try {					
 					// Se notifica al servidor que se enviará un video
+					
 					out.println(VIDEO + SEPARADOR + seleccionado.getName());
 					
 					byte[] contenedor = new byte[TAMANIO_SEGMENTO];
 					BufferedInputStream bis = new BufferedInputStream(new FileInputStream(seleccionado));
 					DataOutputStream dos =  new DataOutputStream(s.getOutputStream());
 					
+					long total = seleccionado.length();
+					
 					dos.writeLong(seleccionado.length());
 					dos.flush();
 					
 					int r;
+					int suma = 0;
 					while ((r = bis.read(contenedor)) != -1) {
 						dos.write(contenedor, 0, r);
 						dos.flush();
-						progreso += r;
+						suma += r;
+						progreso = (int) ((suma*100)/total);
 					}
 					bis.close();
 					
@@ -123,12 +133,14 @@ public class Cliente {
 					for (String c : nuevos) {
 						listaCanales.add(c);
 					}
+
+					i.notificarEnvio();
 				}
 				catch(Exception e) {
 					e.printStackTrace();
 				}
-//			}
-//		});
-//		envio.start();
+			}
+		});
+		envio.start();
 	}
 }

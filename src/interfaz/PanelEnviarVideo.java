@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
@@ -28,6 +29,7 @@ public class PanelEnviarVideo extends JPanel implements ActionListener
 	private JTextField nombreArchivo;
 	private JButton butSeleccionar;
 	private JButton	butEnviar;
+	private JProgressBar progressBar;
 	
 	public PanelEnviarVideo(InterfazCliente p) {
 		principal = p;
@@ -50,10 +52,14 @@ public class PanelEnviarVideo extends JPanel implements ActionListener
 		nombreArchivo.setHorizontalAlignment(JTextField.CENTER);
 		nombreArchivo.setEditable(false);
 		
+		progressBar = new JProgressBar(0, 100);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+		
 		centro.add(new JLabel());
 		centro.add(nomArch);
 		centro.add(nombreArchivo);
-		centro.add(new JLabel());
+		centro.add(progressBar);
 		
 		// Creación y configuración del panel de botones
 		JPanel buts = new JPanel();
@@ -77,7 +83,7 @@ public class PanelEnviarVideo extends JPanel implements ActionListener
 
 	private File seleccionarArchivo() {
 		JFileChooser fc = new JFileChooser( "./data" );
-		FileFilter filter = new FileNameExtensionFilter("Video files", new String[] {"3gp", "avi", "flv", "m4v", "mov", "mp4", "mpg", "mpeg", "wmv", "webm", "mvk"});
+		FileFilter filter = new FileNameExtensionFilter("Video files", new String[] {"3gp", "avi", "flv", "m4v", "mov", "mp4", "mpg", "mpeg", "wmv", "webm", "mkv"});
 		fc.setFileFilter(filter);
 		fc.setDialogTitle( "Seleccionar archivo a enviar al servidor" );
 		int resultado = fc.showOpenDialog( this );
@@ -100,6 +106,11 @@ public class PanelEnviarVideo extends JPanel implements ActionListener
 	
 	public void habilitarBotonEnviar(boolean habilitar) {
 		butEnviar.setEnabled(habilitar);
+	}
+	
+	public void actualizarProgreso(int nuevo) {
+		progressBar.setValue(nuevo);
+		System.out.println(nuevo);
 	}
 	
 	@Override
