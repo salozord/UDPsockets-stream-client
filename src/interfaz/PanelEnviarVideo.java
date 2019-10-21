@@ -31,7 +31,7 @@ public class PanelEnviarVideo extends JPanel implements ActionListener
 	
 	public PanelEnviarVideo(InterfazCliente p) {
 		principal = p;
-		setPreferredSize(new Dimension(400, 200));
+		setPreferredSize(new Dimension(300, 200));
 		setLayout(new BorderLayout());
 		setBorder(new TitledBorder("Enviar Vídeo"));
 		

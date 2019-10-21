@@ -34,13 +34,13 @@ public class InterfazCliente extends JFrame
 		setLocationRelativeTo(null);
 		setTitle("Video Streaming Client");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(1200, 600);
+		setSize(1100, 600);
 		setResizable(false);
 		setLayout(new BorderLayout());
 		
 		reproductor = new EmbeddedMediaPlayerComponent();
+		reproductor.setSize(800, 600);
 //		reproductor.setBackground(Color.black);
-//		reproductor.setSize(800, 600);
 		
 //		MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(new String[] {"--no-plugins-cache", "--no-video-title-show", "--no-snapshot-preview"}) ;
 //      reproductor.set(mediaPlayerFactory.videoSurfaces().newVideoSurface(canvas));
@@ -92,7 +92,7 @@ public class InterfazCliente extends JFrame
 		//Actualiza el reproductor en el canal actual para recibir el streaming
 //		reproductor.media().play(getCliente().getCanalActual(), {});
 		reproductor.mediaPlayer().controls().stop();
-		reproductor.mediaPlayer().release();
+//		reproductor.mediaPlayer().release();
 //		Thread play = new Thread(new Runnable() {
 //			@Override
 //			public void run() {
@@ -100,7 +100,7 @@ public class InterfazCliente extends JFrame
 //			}
 //		});
 //		play.start();
-		reproductor.mediaPlayer().media().play(cliente.getCanalActual());
+		reproductor.mediaPlayer().media().start(cliente.getCanalActual());
 		System.out.println("DESPUES DEL PLAY");
 	}
 	

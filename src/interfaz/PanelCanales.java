@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,7 +30,7 @@ public class PanelCanales extends JPanel implements ActionListener {
 
 	public PanelCanales(InterfazCliente p) {
 		principal = p;
-		setPreferredSize(new Dimension(400, 400));
+		setPreferredSize(new Dimension(300, 400));
 		setLayout(new BorderLayout());
 		
 		inicializarPanelCanales();
@@ -42,7 +43,8 @@ public class PanelCanales extends JPanel implements ActionListener {
 		centro.setLayout(new GridLayout(4, 1, 0, 4));
 		centro.setBorder(new TitledBorder("Canales"));
 		
-		listaCanales = new JComboBox<String>((String[]) principal.getCliente().getListaCanales().toArray());
+		Object[] objs = principal.getCliente().getListaCanales().toArray();
+		listaCanales = new JComboBox<String>(Arrays.copyOf(objs, objs.length, String[].class));
 		butConectar = new JButton("Conectar");
 		butConectar.addActionListener(this);
 		butConectar.setActionCommand(CONECTAR);
@@ -88,7 +90,8 @@ public class PanelCanales extends JPanel implements ActionListener {
 	}
 	
 	public void actualizarLista() {
-		listaCanales = new JComboBox<String>((String[]) principal.getCliente().getListaCanales().toArray());
+		Object[] objs = principal.getCliente().getListaCanales().toArray();
+		listaCanales = new JComboBox<String>(Arrays.copyOf(objs, objs.length, String[].class));
 		repaint();
 	}
 	

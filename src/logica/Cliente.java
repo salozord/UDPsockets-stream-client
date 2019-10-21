@@ -19,7 +19,7 @@ public class Cliente {
 	public static final String AUTENTICADO = "AUTENTICADO";
 	public static final String ERROR = "ERROR";
 	public static final String VIDEO = "VIDEO";
-	public static final String PROTOCOLO = "udp://";
+	public static final String PROTOCOLO = "udp://@";
 	
 	private Socket s;
 	private BufferedReader in;
